@@ -19,6 +19,7 @@ class MotorPot(Thread):
 
         self.setPoint = None
         self.newSetPoint = False
+        self.moving = False
 
         self.daemon = True
         self.verbose = verbose
@@ -70,10 +71,12 @@ class MotorPot(Thread):
                 self.motor.set_dir(dir * self.dirmult)
                 self.motor.set_speed(speed)
 
-            if setPoint is not None:
-                # fine-grained timing while we're moving the pot
+                self.moving = True
+
                 time.sleep(0.001)
             else:
+                self.moving = False
+
                 if self.verbose:
                     print "monitor", self.value
                 # course-grained if we're just reading it

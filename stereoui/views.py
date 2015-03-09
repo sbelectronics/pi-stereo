@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import RequestContext, loader
 import json
 
-from stereopot import StereoPot
+from stereocontroller import StereoPot
 
 # Create your views here.
 
@@ -14,7 +14,7 @@ def index(request):
     return HttpResponse(template.render(context))
 
 def setVolume(request):
-    StereoPot.set( int(request.GET.get("power","0")) )
+    StereoPot.set( int(request.GET.get("volume","0")) )
 
     return HttpResponse("okey dokey")
 
@@ -29,7 +29,8 @@ def getSettings(request):
     result = {}
 
     result["volumeSetPoint"] = StereoPot.setPoint
-    result["volumeCurrent"] = StereoPot.value
+    result["volumeCurrent"] = StereoPot.value or 0
+    result["volumeMoving"] = StereoPot.moving
 
     return HttpResponse(json.dumps(result), content_type='application/javascript')
 

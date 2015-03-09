@@ -3,10 +3,10 @@
 <html><head>
   <script src="{% static 'js/vendor/jquery-1.9.1.js' %}"></script>
   <script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
-  <script src="{% static 'js/xmasui.js' %}"></script>
+  <script src="{% static 'js/stereoui.js' %}"></script>
   <link rel="stylesheet" href="{% static 'css/bootstrap-3.2.0.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-  <link rel="stylesheet" href="{% static 'css/xmas.css' %}">
+  <link rel="stylesheet" href="{% static 'css/stereoui.css' %}">
   <link rel="stylesheet" href="{% static 'css/color-buttons.css' %}">
 </head>
 <body>
@@ -15,65 +15,11 @@
 <h3>Power</h3>
 <button class ="btn btn-red btn-power" id="power-on"><span id="icon-power-on" class="icon-power glyphicon glyphicon-ok" aria-hidden="true"></span> on</button>
 <button class ="btn btn-black btn-power" id="power-off"><span id="icon-power-off" class="icon-power glyphicon glyphicon-ok" aria-hidden="true"></span> off</button>
-<h3>FPS</h3>
+<h3>Volume</h3>
 <div>
-<div id="slider-fps"></div><div id="slider-fps-value"></div>
+<div id="slider-volume"></div>
+<div id="below-volume-slider"><span id="volume-setPoint"></span><span id="volume-moving"></span></div>
 </div>
-</div>
-
-<div id="single-colors" class="box">
-<h3>Single colors</h3>
-<button class ="btn btn-red btn-single-color" id="single-red"><span id="icon-single-red" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> red</button>
-<button class ="btn btn-green btn-single-color" id="single-green"><span id="icon-single-green" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> green</button>
-<button class ="btn btn-blue btn-single-color" id="single-blue"><span id="icon-single-blue" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> blue</button>
-<button class ="btn btn-white btn-single-color" id="single-white"><span id="icon-single-white" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> white</button>
-<button class ="btn btn-magenta btn-single-color" id="single-magenta"><span id="icon-single-magenta" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> magenta</button>
-<button class ="btn btn-yellow btn-single-color" id="single-yellow"><span id="icon-single-yellow" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> yellow</button>
-<button class ="btn btn-cyan btn-single-color" id="single-cyan"><span id="icon-single-cyan" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> cyan</button>
-<button class ="btn btn-black btn-single-color" id="single-black"><span id="icon-single-black" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> black</button>
-<button class ="btn btn-orange btn-single-color" id="single-orange"><span id="icon-single-orange" class="icon-single-color glyphicon glyphicon-ok" aria-hidden="true"></span> orange</button>
-</div>   <!-- end single-colors -->
-
-<div id="custom-program" class="box">
-<h3>Custom</h3>
-<div id="custom-function-div">
-<select id="custom-function">
-    <option value="sequence">sequence</option>
-    <option value="fade">fade</option>
-    <option value="cycle">cycle</option>
-    <option value="morph">morph</option>
-    <option value="randomfill">randomfill</option>
-</select>
-</div> <!-- end custom-function-div -->
-<div id="custom-buttons-div">
-<button class="btn custom-color-button btn-red" id="custom-red"><span id="icon-custom-red" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> red</button>
-<button class="btn custom-color-button btn-green" id="custom-green"><span id="icon-custom-green" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> green</button>
-<button class="btn custom-color-button btn-blue" id="custom-blue"><span id="icon-custom-blue" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> blue</button>
-<button class="btn custom-color-button btn-white" id="custom-white"><span id="icon-custom-white" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> white</button>
-<button class="btn custom-color-button btn-magenta" id="custom-magenta"><span id="icon-custom-magenta" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> magenta</button>
-<button class="btn custom-color-button btn-yellow" id="custom-yellow"><span id="icon-custom-yellow" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> yellow</button>
-<button class="btn custom-color-button btn-cyan" id="custom-cyan"><span id="icon-custom-cyan" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> cyan</button>
-<button class="btn custom-color-button btn-black" id="custom-black"><span id="icon-custom-black" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> black</button>
-<button class="btn custom-color-button btn-orange" id="custom-orange"><span id="icon-custom-orange" class="icon-custom-color glyphicon glyphicon-ok" aria-hidden="true"></span> orange</button>
-</div> <!-- end custom-buttons-div -->
-<div id="custom-count-div">
-<select id="custom-count">
-    <option value="1">1 each</option>
-    <option value="2">2 each</option>
-    <option value="3">3 each</option>
-    <option value="4">4 each</option>
-    <option value="5">5 each</option>
-    <option value="6">6 each</option>
-    <option value="7">7 each</option>
-    <option value="8">8 each</option>
-    <option value="9">9 each</option>
-    <option value="10">10 each</option>
-</select>
-</div> <!--- end custom-count-div -->
-</div>
-
-<div id="randomizer" class="box">
-<button class="btn" id="random">random</button>
 </div>
 
 </body>
