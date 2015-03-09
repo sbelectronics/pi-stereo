@@ -1,0 +1,35 @@
+import RPi.GPIO as IO
+
+L293_1 = 22
+L293_2 = 23
+L293_ENABLE = 18
+
+class Motor:
+    def __init__(self, pin1=L293_1, pin2=L293_2, enable=L293_ENABLE):
+        self.pin1 = pin1
+        self.pin2 = pin2
+        self.enable = enable
+
+        IO.setmode(IO.BCM)
+        IO.setup(self.enable, IO.OUT)
+        IO.setup(self.pin1, IO.OUT)
+        IO.setup(self.pin2, IO.OUT)
+
+        IO.output(self.pin1, True)
+        IO.output(self.pin2, False)
+        IO.output(self.enable, False)
+
+        self.pwm = IO.PWM(L293_ENABLE,100)
+        self.pwm.start(0)
+
+    def set_dir(self, dir):
+        if (dir > 0):
+            IO.output(self.pin1, True)
+            IO.output(self.pin2, False)
+        else:
+            IO.output(self.pin1, False)
+            IO.output(self.pin2, True)
+
+    def set_speed(self, speed):
+        self.pwm.ChangeDutyCycle(100*speed/100)
+
