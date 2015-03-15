@@ -1,14 +1,20 @@
 import RPi.GPIO as IO
 
-L293_1 = 22
-L293_2 = 23
+L293_1 = 23   # 22 for the prototype
+L293_2 = 24   # 23 for the prototype
 L293_ENABLE = 18
+
+L293_3 = 27
+L293_4 = 22
+L293_ENABLE2 = 17
 
 class Motor:
     def __init__(self, pin1=L293_1, pin2=L293_2, enable=L293_ENABLE):
         self.pin1 = pin1
         self.pin2 = pin2
         self.enable = enable
+
+        print "pin1=",pin1, "pin2=",pin2, "enable=", enable
 
         IO.setmode(IO.BCM)
         IO.setup(self.enable, IO.OUT)
