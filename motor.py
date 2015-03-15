@@ -1,7 +1,7 @@
 import RPi.GPIO as IO
 
-L293_1 = 23   # 22 for the prototype
-L293_2 = 24   # 23 for the prototype
+L293_1 = 24   # 22 for the prototype
+L293_2 = 23   # 23 for the prototype
 L293_ENABLE = 18
 
 L293_3 = 27
