@@ -35,6 +35,18 @@ class PowerControl(Thread):
     def set_power(self, value):
         self.newPower = value
 
+    def next_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("n\n")
+
+    def set_station(self, num):
+        open("/home/pi/.config/pianobar/ctl","w").write("s%s\n" % str(num))
+
+    def ban_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("-\n")
+
+    def love_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("+\n")
+
     def run(self):
         last_input1 = True # inputs have pullups
 

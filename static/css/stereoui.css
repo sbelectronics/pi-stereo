@@ -11,6 +11,14 @@
     overflow: hidden;
 }
 
+#love-song {
+    cursor: pointer;
+}
+
+#ban-song {
+    cursor: pointer;
+}
+
 .btn-single-color {
     margin-top: 10px;
     width: 100px;
@@ -46,5 +54,10 @@
     padding: 10px 12px;
     border: 0;
     max-width: 450px;
+}
+
+.now-playing-label {
+    text-align: right;
+    padding-right: 10px;
 }
 

@@ -23,6 +23,26 @@ def setPower(request):
 
     return HttpResponse("okey dokey")
 
+def setStation(request):
+    Power.set_station( request.GET.get("value","q") )
+
+    return HttpResponse("okey dokey")
+
+def nextSong(request):
+    Power.next_song();
+
+    return HttpResponse("okey dokey")
+
+def loveSong(request):
+    Power.love_song();
+
+    return HttpResponse("okey dokey")
+
+def banSong(request):
+    Power.ban_song();
+
+    return HttpResponse("okey dokey")
+
 def getSettings(request):
     result = {}
 
@@ -30,6 +50,33 @@ def getSettings(request):
     result["volumeCurrent"] = StereoPot.value or 0
     result["volumeMoving"] = StereoPot.moving
     result["power"] = Power.power
+
+    result["song"] = "unknown"
+    result["artist"] = "unknown"
+    result["station"] = "unknown"
+    result["stationCount"] = "0"
+    result["stations"] = []
+
+    try:
+        lines = open("/home/pi/.config/pianobar/now_playing_vars").readlines()
+        for line in lines:
+            if (not "=" in line):
+                continue
+            (k,v) = line.split("=",1)
+
+            if (k=="artist"):
+                result["artist"] = v
+            elif (k=="title"):
+                result['song'] = v
+            elif (k=="stationName"):
+                result['station'] = v
+            elif (k=="stationCount"):
+                result['stationCount'] = v
+            elif (k.startswith("station")):
+                tmp = (k[7:], v)
+                result["stations"].append(tmp)
+    except:
+        pass
 
     return HttpResponse(json.dumps(result), content_type='application/javascript')
 
