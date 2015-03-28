@@ -114,7 +114,12 @@ function stereo() {
 
         $("#now-playing-station-select").html(html);
 
-        $("#now-playing-station-select").chosen({disable_search: true});
+        if (stereo.didChosen) {
+            $("#now-playing-station-select").trigger("chosen:updated");
+        } else {
+            $("#now-playing-station-select").chosen({disable_search: true});
+            stereo.didChosen = true;
+        }
     }
 
     parseSettings = function(settings) {
@@ -148,6 +153,7 @@ function stereo() {
                 //$("#now-playing-station").text(settings["station"]);
 
                 if (this.lastStationName != settings["station"]) {
+                    console.log("XXX");
                     this.lastStationName = settings["station"];
                     this.showedStationComboBox=true;
                     this.updateStationComboBox(settings["station"], settings["stations"]);
