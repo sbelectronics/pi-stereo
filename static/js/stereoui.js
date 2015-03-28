@@ -102,11 +102,11 @@ function stereo() {
            station_name = stations[k][1];
            selected="";
 
-           //if (station_name == station) {
-           //    selected = " selected";
-           //} else {
-           //    selected = "";
-           //}
+           if (station_name == station) {
+               selected = " selected";
+           } else {
+               selected = "";
+           }
 
            html = html + "<option value=" + station_num + selected + ">" + station_name + "</option>";
         }
@@ -140,9 +140,8 @@ function stereo() {
             if (settings["station"]) {
                 //$("#now-playing-station").text(settings["station"]);
 
-                $("#now-playing-station-name").text(settings["station"]);
-
-                if (!this.showedStationComboBox) {
+                if (this.lastStationName != settings["station"]) {
+                    this.lastStationName = settings["station"];
                     this.showedStationComboBox=true;
                     this.updateStationComboBox(settings["station"], settings["stations"]);
                 }
