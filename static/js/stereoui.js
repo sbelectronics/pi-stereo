@@ -2,7 +2,7 @@ COLORS = ["red", "green", "blue", "white", "magenta", "yellow", "cyan",  "black"
 
 function stereo() {
     onVolumeChange = function() {
-        console.log("FPSChange");
+        console.log("VolumeChange");
         volume = $("#slider-volume").slider("value");
         $("#volume-setPoint").text(volume);
         if (stereo.postUI) {
@@ -23,7 +23,7 @@ function stereo() {
     onStationChanged = function() {
         console.log("stationChanged");
         station_id = $("#now-playing-station-select").val();
-        $("#now-playing-station-select").val("---")
+        //$("#now-playing-station-select").val("---")
         if (stereo.postUI) {
             stereo.setStation(station_id);
         }
@@ -95,7 +95,8 @@ function stereo() {
     }
 
     updateStationComboBox = function(station, stations) {
-        html = '<option value="---">---</option>';
+        html = "";
+        //html = '<option value="---">---</option>';
 
         for (k in stations) {
            station_num = stations[k][0];
@@ -112,6 +113,8 @@ function stereo() {
         }
 
         $("#now-playing-station-select").html(html);
+
+        $("#now-playing-station-select").chosen({disable_search: true});
     }
 
     parseSettings = function(settings) {
@@ -127,9 +130,13 @@ function stereo() {
                 $("#volume-moving").text("");
             }
             if (settings["power"]) {
-                $("#icon-power-on").click();
+                if (! $("#power-on").hasClass("active") ) {
+                    $("#icon-power-on").click();
+                }
             } else {
-                $("#icon-power-off").click();
+                if (! $("#power-off").hasClass("active") ) {
+                    $("#icon-power-off").click();
+                }
             }
             if (settings["song"]) {
                 $("#now-playing-song").text(settings["song"]);
