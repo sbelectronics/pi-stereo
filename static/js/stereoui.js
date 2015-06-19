@@ -55,12 +55,28 @@ function stereo() {
         }
     }
 
+    onInput = function(i) {
+        var button_selector = "#input" + i;
+        var icon_selector = "#icon-input" + i;
+        $(".btn-input").removeClass("active");
+        $(".icon-input").hide();
+        $(button_selector).addClass("active");
+        $(icon_selector).show()
+        if (stereo.postUI) {
+            stereo.setInput(i);
+        }
+    }
+
     sendVolume = function(volume) {
         $.ajax({url: "/stereo/setVolume?volume=" + volume});
     }
 
     setPower = function(value) {
         $.ajax({url: "/stereo/setPower?value=" + value});
+    }
+
+    setInput = function(value) {
+        $.ajax({url: "/stereo/setInput?value=" + value});
     }
 
     nextSong = function(value) {
@@ -89,6 +105,11 @@ function stereo() {
         $("#power-on").click(function() { stereo.onPowerOn(); });
         $("#power-off").click(function() { stereo.onPowerOff(); });
         $("#next-song").click(function() { stereo.nextSong(); });
+
+        $("#input0").click(function() { stereo.onInput(0); } );
+        $("#input1").click(function() { stereo.onInput(1); } );
+        $("#input2").click(function() { stereo.onInput(2); } );
+        $("#input3").click(function() { stereo.onInput(3); } );
 
         $("#love-song").click(function() { stereo.loveSong(); });
         $("#ban-song").click(function() { stereo.banSong(); });
@@ -148,6 +169,9 @@ function stereo() {
             }
             if (settings["artist"]) {
                 $("#now-playing-artist").text(settings["artist"]);
+            }
+            if (settings["input"]) {
+                onInput(settings["input"]);
             }
             if (settings["station"]) {
                 //$("#now-playing-station").text(settings["station"]);

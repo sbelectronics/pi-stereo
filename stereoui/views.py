@@ -23,6 +23,11 @@ def setPower(request):
 
     return HttpResponse("okey dokey")
 
+def setInput(request):
+    Power.set_input( int(request.GET.get("value","2")))
+
+    return HttpResponse("okey dokey")
+
 def setStation(request):
     Power.set_station( request.GET.get("value","q") )
 
@@ -50,6 +55,7 @@ def getSettings(request):
     result["volumeCurrent"] = StereoPot.value or 0
     result["volumeMoving"] = StereoPot.moving
     result["power"] = Power.power
+    result["input"] = Power.input
 
     result["song"] = "unknown"
     result["artist"] = "unknown"

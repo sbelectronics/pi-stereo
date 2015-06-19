@@ -5,6 +5,11 @@ import time
 
 INPUT_1 = 7
 
+MULT_0 = 16
+MULT_1 = 26
+MULT_2 = 20
+MULT_3 = 21
+
 class PowerControl(Thread):
     def __init__(self, pin1=L293_3, pin2=L293_4, enable=L293_ENABLE2):
         Thread.__init__(self)
@@ -21,6 +26,11 @@ class PowerControl(Thread):
         IO.setup(self.pin1, IO.OUT)
         IO.setup(self.pin2, IO.OUT)
 
+        IO.setup(MULT_0, IO.OUT)
+        IO.setup(MULT_1, IO.OUT)
+        IO.setup(MULT_2, IO.OUT)
+        IO.setup(MULT_3, IO.OUT)
+
         IO.output(self.pin1, False)
         IO.output(self.pin2, False)
         IO.output(self.enable, True)
@@ -30,7 +40,17 @@ class PowerControl(Thread):
 
         self.daemon = True
 
+        self.set_input(2)
+
         self.start()
+
+    def set_input(self, value):
+        self.input = value
+        value = value + 4
+        IO.output(MULT_0, value&1)
+        IO.output(MULT_1, (value>>1)&1)
+        IO.output(MULT_2, (value>>2)&1)
+        IO.output(MULT_3, (value>>3)&1)
 
     def set_power(self, value):
         self.newPower = value
