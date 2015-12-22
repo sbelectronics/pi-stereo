@@ -37,6 +37,7 @@ class PowerControl(Thread):
 
         self.power = False
         self.newPower = None
+        self.turnOnTime = None
 
         self.daemon = True
 
@@ -55,6 +56,10 @@ class PowerControl(Thread):
     def set_power(self, value):
         self.newPower = value
 
+    def delay_off(self, amount):
+        self.set_power(False)
+        self.turnOnTime = time.time() + amount
+
     def next_song(self):
         open("/home/pi/.config/pianobar/ctl","w").write("n\n")
 
@@ -71,6 +76,11 @@ class PowerControl(Thread):
         last_input1 = True # inputs have pullups
 
         while True:
+            # check for a turn-on event from delay_off()
+            if (self.turnOnTime is not None) and (time.time() > self.turnOnTime):
+                self.newPower = True
+                self.turnOnTime = None
+
             if (self.newPower is not None):
                 print "power change", self.power, self.newPower
                 self.power = self.newPower
