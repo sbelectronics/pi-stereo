@@ -10,6 +10,7 @@ PlayerControl().run_player("start_pianobar.sh")
 class PlayerControl:
     def __init__(self):
         self.station = "None"
+        self.player = "None"
         self.set_station("pandora")
 
     def setPlayer(self, player, *args):
@@ -20,6 +21,8 @@ class PlayerControl:
             self.run_player("start_pianobar.sh", *args)
         elif (player == "fmradio"):
             self.run_player("start_fmradio.sh", *args)
+
+        self.player = player
 
     def destroy_screen(self, name):
         for dir in os.listdir("/var/run/screen"):

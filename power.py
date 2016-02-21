@@ -58,7 +58,10 @@ class PowerControl(Thread):
 
     def delay_off(self, amount):
         self.set_power(False)
-        self.turnOnTime = time.time() + amount
+        if (not self.power) and (self.turnOnTime is not None) and (self.turnOnTime > time.time()):
+            self.turnOnTime = self.turnOnTime + amount
+        else:
+            self.turnOnTime = time.time() + amount
 
     def next_song(self):
         open("/home/pi/.config/pianobar/ctl","w").write("n\n")

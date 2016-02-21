@@ -204,7 +204,7 @@ function stereo() {
                 }
             }
             if (settings["fmstation"]) {
-                onStation(settings["fmstation"]);
+                onFMStation(settings["fmstation"]);
             }
         }
         finally {

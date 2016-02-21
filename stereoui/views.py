@@ -39,7 +39,7 @@ def setStation(request):
     return HttpResponse("okey dokey")
 
 def nextSong(request):
-    if (Power.input == 3):
+    if (Power.input == 3) or (Player.player=="fmradio"):
         # for FM, the <next> button is my commercial skip
         Power.delay_off(60)
     else:
