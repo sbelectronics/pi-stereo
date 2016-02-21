@@ -67,6 +67,18 @@ function stereo() {
         }
     }
 
+    onFMStation = function(i) {
+        var button_selector = "#fmstation-" + i;
+        var icon_selector = "#icon-fmstation-" + i;
+        $(".btn-fmstation").removeClass("active");
+        $(".icon-fmstation").hide();
+        $(button_selector).addClass("active");
+        $(icon_selector).show()
+        if (stereo.postUI) {
+            stereo.setFMStation(i);
+        }
+    }
+
     sendVolume = function(volume) {
         $.ajax({url: "/stereo/setVolume?volume=" + volume});
     }
@@ -95,6 +107,10 @@ function stereo() {
         $.ajax({url: "/stereo/setStation?value=" + value});
     }
 
+    setFMStation = function(value) {
+        $.ajax({url: "/stereo/setFMStation?value=" + value});
+    }
+
     initButtons = function() {
         $("#slider-volume").slider({min: 1,
                                     max:1625,
@@ -110,6 +126,10 @@ function stereo() {
         $("#input1").click(function() { stereo.onInput(1); } );
         $("#input2").click(function() { stereo.onInput(2); } );
         $("#input3").click(function() { stereo.onInput(3); } );
+
+        $("#fmstation-pandora").click(function() { stereo.onFMStation("pandora"); } );
+        $("#fmstation-945").click(function() { stereo.onFMStation("945"); } );
+        $("#fmstation-991").click(function() { stereo.onFMStation("991"); } );
 
         $("#love-song").click(function() { stereo.loveSong(); });
         $("#ban-song").click(function() { stereo.banSong(); });
@@ -182,6 +202,9 @@ function stereo() {
                     this.showedStationComboBox=true;
                     this.updateStationComboBox(settings["station"], settings["stations"]);
                 }
+            }
+            if (settings["fmstation"]) {
+                onStation(settings["fmstation"]);
             }
         }
         finally {

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import RequestContext, loader
 import json
 
-from stereocontroller import StereoPot, Power
+from stereocontroller import StereoPot, Power, Player
 
 # Create your views here.
 
@@ -25,6 +25,11 @@ def setPower(request):
 
 def setInput(request):
     Power.set_input( int(request.GET.get("value","2")))
+
+    return HttpResponse("okey dokey")
+
+def setFMStation(request):
+    Player.set_station( request.GET.get("value","pandora") )
 
     return HttpResponse("okey dokey")
 
@@ -66,6 +71,8 @@ def getSettings(request):
     result["station"] = "unknown"
     result["stationCount"] = "0"
     result["stations"] = []
+
+    result["fmstation"] = Player.station
 
     try:
         lines = open("/home/pi/.config/pianobar/now_playing_vars").readlines()
