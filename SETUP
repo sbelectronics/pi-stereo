@@ -66,5 +66,4 @@ sudo make install
 
 #autostart
 crontab -e
-  @reboot bash /home/pi/start_pianobar.sh &>/dev/null
   @reboot bash /home/pi/start_django.sh &> /dev/null
