@@ -128,7 +128,9 @@ function stereo() {
         $("#input3").click(function() { stereo.onInput(3); } );
 
         $("#fmstation-pandora").click(function() { stereo.onFMStation("pandora"); } );
+        $("#fmstation-919").click(function() { stereo.onFMStation("919"); } );
         $("#fmstation-945").click(function() { stereo.onFMStation("945"); } );
+        $("#fmstation-961").click(function() { stereo.onFMStation("961"); } );
         $("#fmstation-991").click(function() { stereo.onFMStation("991"); } );
 
         $("#love-song").click(function() { stereo.loveSong(); });
