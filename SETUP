@@ -20,8 +20,9 @@ sudo reboot
 
 # from home
 scp alsa-base.conf pi@198.0.0.215:/home/pi/
-scp start_pianobar.sh pi@198.0.0.215:/home/pi/.config/pianobar/  
-scp dotconfig/pianobar/* pi@198.0.0.215:/home/pi/
+scp start_pianobar.sh pi@198.0.0.215:/home/pi/  
+scp start_django.sh pi@198.0.0.215:/home/pi/
+scp dotconfig/pianobar/* pi@198.0.0.215:/home/pi/.config/pianobar/
 
 # moar stuff
 sudo apt-get -y install screen
@@ -62,3 +63,8 @@ sudo apt-get -y install libao-dev libmad0-dev libfaad-dev libgnutls-dev libjson0
 cd pianobar
 make
 sudo make install
+
+#autostart
+crontab -e
+  @reboot bash /home/pi/start_pianobar.sh &>/dev/null
+  @reboot bash /home/pi/start_django.sh &> /dev/null
