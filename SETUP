@@ -1,0 +1,64 @@
+configured terminal emulator for UTF-8
+
+export TERM=vt102
+raspi-config
+   expand fs
+   enable spi
+   enable i2c
+apt-get update
+apt-get install emacs23-nox
+emacs /etc/netowrk/intercaces
+  address 198.0.0.215
+  netmask 255.255.255.0
+  network 198.0.0.0
+  broadcast 198.0.0.255
+  gateway 198.0.0.108
+
+sudo bash -c "echo i2c-bcm2708 >> /etc/modules"
+sudo bash -c "echo i2c-dev >> /etc/modules"
+sudo reboot
+
+# from home
+scp alsa-base.conf pi@198.0.0.215:/home/pi/
+scp start_pianobar.sh pi@198.0.0.215:/home/pi/.config/pianobar/  
+scp dotconfig/pianobar/* pi@198.0.0.215:/home/pi/
+
+# moar stuff
+sudo apt-get -y install screen
+sudo apt-get -y install python-smbus
+sudo apt-get -y install i2c-tools
+sudo cp alsa-base.conf /etc/modprobe.d/
+rm -f /home/pi/.config/pianobar/ctl
+mkfifo /home/pi/.config/pianobar/ctl
+
+# django
+#sudo apt-get -y install python-pip
+sudo apt-get -y install python-setuptools
+sudo easy_install pip
+sudo apt-get -y install sqlite3
+sudo apt-get -y install python-dev
+sudo pip install Django==1.7
+sudo pip install pyephem
+
+# rtl-sdr
+apt-get install git cmake libusb-dev libusb-1.0-0-dev build-essential
+git clone git://git.osmocom.org/rtl-sdr.git
+cd rtl-sdr/
+mkdir build
+cd build
+cmake ../ -DINSTALL_UDEV_RULES=ON
+make
+sudo make install
+sudo cp ../rtl-sdr.rules /etc/udev/rules.d/
+sudo ldconfig
+sudo rmmod dvb_usb_rtl28xxu
+sudo bash
+   echo "blacklist dvb_usb_rtl28xxu" > /etc/modprobe.d/blacklist-dvb_usb_rtl28xxu.conf
+#test
+# rtl_fm -M wbfm -f 99.1M -r 48k | aplay -r 48k -f S16_LE
+
+# pianobar
+sudo apt-get -y install libao-dev libmad0-dev libfaad-dev libgnutls-dev libjson0-dev libgcrypt11-dev
+cd pianobar
+make
+sudo make install
