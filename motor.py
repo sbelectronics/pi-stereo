@@ -25,7 +25,7 @@ class Motor:
         IO.output(self.pin2, False)
         IO.output(self.enable, False)
 
-        self.pwm = IO.PWM(L293_ENABLE,100)
+        self.pwm = IO.PWM(self.enable,100)
         self.pwm.start(0)
 
     def set_dir(self, dir):

@@ -4,8 +4,12 @@ from threading import Thread
 from motor import Motor, L293_1, L293_2, L293_ENABLE
 from ads1015 import ADS1015, MUX_AIN0, PGA_4V, MODE_CONT, DATA_1600, COMP_MODE_TRAD, COMP_POL_LOW, COMP_NON_LAT, COMP_QUE_DISABLE
 
+# moved the L293 enable from gpio18 to gpio15 to prevent conflict with
+# digi+ io card
+STEREO_L293_ENABLE = 15
+
 class MotorPot(Thread):
-    def __init__(self, bus, adc_addr=0x48, motor_pin1=L293_1, motor_pin2=L293_2, motor_enable = L293_ENABLE, dirmult=1, verbose=False):
+    def __init__(self, bus, adc_addr=0x48, motor_pin1=L293_1, motor_pin2=L293_2, motor_enable = STEREO_L293_ENABLE, dirmult=1, verbose=False):
         Thread.__init__(self)
 
         self.motor = Motor(pin1=motor_pin1, pin2=motor_pin2, enable = motor_enable)
