@@ -63,7 +63,23 @@ sudo apt-get -y install libao-dev libmad0-dev libfaad-dev libgnutls-dev libjson0
 cd pianobar
 make
 sudo make install
+sudo mkdir /var/pianobar
+sudo chmod a+rwx /var/pianobar
 
 #autostart
 crontab -e
   @reboot bash /home/pi/start_django.sh &> /dev/null
+
+#avoid corrupting the SD card:
+sudo emacs /etc/fstab
+tmpfs    /var/pianobar   tmpfs    defaults,noatime,nosuid,mode=0777,size=1m 0 0       
+tmpfs    /tmp            tmpfs    defaults,noatime,nosuid,size=100m    0 0
+tmpfs    /var/tmp        tmpfs    defaults,noatime,nosuid,size=30m    0 0 
+tmpfs    /var/log        tmpfs    defaults,noatime,nosuid,mode=0755,size=100m    0 0
+tmpfs    /var/run        tmpfs    defaults,noatime,nosuid,mode=0755,size=2m    0 0
+
+#boot in readonly
+sudo emacs /boot/cmdline.txt
+    add to cmdline: fastboot noswap ro
+sudo emacs /etc/fstab
+    add ro to each mmc mount
