@@ -48,7 +48,7 @@ class PlayerControl:
             self.setPlayer("pianobar")
         else:
             x=int(name)*100000
-            x=x-20000
+            #x=x-10000
             self.setPlayer("fmradio", str(x))
         self.station = name
 
