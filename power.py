@@ -1,14 +1,18 @@
 from threading import Thread
 from motor import L293_3, L293_4, L293_ENABLE2
 import RPi.GPIO as IO
+import socket
 import time
+import traceback
 
 INPUT_1 = 7
 
 MULT_0 = 16
 MULT_1 = 26
-MULT_2 = 20
-MULT_3 = 21
+#MULT_2 = 20
+#MULT_3 = 21
+
+RELAY_BOARD_IP = "198.0.0.238"
 
 class PowerControl(Thread):
     def __init__(self, pin1=L293_3, pin2=L293_4, enable=L293_ENABLE2):
@@ -28,8 +32,8 @@ class PowerControl(Thread):
 
         IO.setup(MULT_0, IO.OUT)
         IO.setup(MULT_1, IO.OUT)
-        IO.setup(MULT_2, IO.OUT)
-        IO.setup(MULT_3, IO.OUT)
+#        IO.setup(MULT_2, IO.OUT)
+#        IO.setup(MULT_3, IO.OUT)
 
         IO.output(self.pin1, False)
         IO.output(self.pin2, False)
@@ -50,11 +54,20 @@ class PowerControl(Thread):
         value = value + 4
         IO.output(MULT_0, value&1)
         IO.output(MULT_1, (value>>1)&1)
-        IO.output(MULT_2, (value>>2)&1)
-        IO.output(MULT_3, (value>>3)&1)
+#        IO.output(MULT_2, (value>>2)&1)
+#        IO.output(MULT_3, (value>>3)&1)
 
     def set_power(self, value):
         self.newPower = value
+        try:
+            if value:
+                msg = "1 on"
+            else:
+                msg = "1 off"
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.sendto(msg, (RELAY_BOARD_IP, 1234))
+        except:
+            traceback.print_exc("failed to notify the relay board")
 
     def delay_off(self, amount):
         self.set_power(False)
