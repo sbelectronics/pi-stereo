@@ -75,7 +75,7 @@ def getSettings(request):
     result["fmstation"] = Player.station
 
     try:
-        lines = open("/home/pi/.config/pianobar/now_playing_vars").readlines()
+        lines = open("/var/pianobar/now_playing_vars").readlines()
         for line in lines:
             if (not "=" in line):
                 continue
