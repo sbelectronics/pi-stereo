@@ -59,15 +59,6 @@ class PowerControl(Thread):
 
     def set_power(self, value):
         self.newPower = value
-        try:
-            if value:
-                msg = "1 on"
-            else:
-                msg = "1 off"
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.sendto(msg, (RELAY_BOARD_IP, 1234))
-        except:
-            traceback.print_exc("failed to notify the relay board")
 
     def delay_off(self, amount):
         self.set_power(False)
@@ -88,6 +79,17 @@ class PowerControl(Thread):
     def love_song(self):
         open("/home/pi/.config/pianobar/ctl","w").write("+\n")
 
+    def control_relayboard(self):
+        try:
+            if self.power:
+                msg = "1 on"
+            else:
+                msg = "1 off"
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.sendto(msg, (RELAY_BOARD_IP, 1234))
+        except:
+            traceback.print_exc("failed to notify the relay board")
+
     def run(self):
         last_input1 = True # inputs have pullups
 
@@ -102,6 +104,7 @@ class PowerControl(Thread):
                 self.power = self.newPower
                 self.newPower = None
                 IO.output(self.pin1, self.power)
+                self.control_relayboard()
 
             input1 = IO.input(INPUT_1)
             if (last_input1 != input1):
