@@ -3,7 +3,7 @@ from ioexpand import PCF8574
 
 MUX_ADDR = 0x20
 
-class Mux(PCF8574):
+class MuxControl(PCF8574):
     def __init__(self, bus, addr):
         PCF8574.__init__(self, bus, addr)
         self.bus.write_byte(self.addr, 0x00)  # all IO are outputs
@@ -19,7 +19,7 @@ def main():
         sys.exit(-1)
 
     bus = smbus.SMBus(1)    
-    mux = Mux(bus, MUX_ADDR)
+    mux = MuxControl(bus, MUX_ADDR)
     mux.set_channel(int(sys.argv[1]))
 
 if __name__ == "__main__":

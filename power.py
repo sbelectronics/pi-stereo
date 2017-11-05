@@ -7,8 +7,8 @@ import traceback
 
 INPUT_1 = 7
 
-MULT_0 = 16
-MULT_1 = 26
+#MULT_0 = 16
+#MULT_1 = 26
 #MULT_2 = 20
 #MULT_3 = 21
 
@@ -30,8 +30,8 @@ class PowerControl(Thread):
         IO.setup(self.pin1, IO.OUT)
         IO.setup(self.pin2, IO.OUT)
 
-        IO.setup(MULT_0, IO.OUT)
-        IO.setup(MULT_1, IO.OUT)
+#        IO.setup(MULT_0, IO.OUT)
+#        IO.setup(MULT_1, IO.OUT)
 #        IO.setup(MULT_2, IO.OUT)
 #        IO.setup(MULT_3, IO.OUT)
 
@@ -50,10 +50,11 @@ class PowerControl(Thread):
         self.start()
 
     def set_input(self, value):
-        self.input = value
-        value = value + 4
-        IO.output(MULT_0, value&1)
-        IO.output(MULT_1, (value>>1)&1)
+        pass # does nothing, replaced by new muxer module
+#        self.input = value
+#        value = value + 4
+#        IO.output(MULT_0, value&1)
+#        IO.output(MULT_1, (value>>1)&1)
 #        IO.output(MULT_2, (value>>2)&1)
 #        IO.output(MULT_3, (value>>3)&1)
 

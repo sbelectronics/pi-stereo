@@ -25,12 +25,14 @@ class DummyPlayer:
 StereoPot = None
 Power = None
 Player = None
+Mux = None
 def startup(noHardware=False):
-    global StereoPot, Power, Player
+    global StereoPot, Power, Player, Mux
     if noHardware:
         StereoPot = DummyMotorPot()
         Power = DummyPower()
         Player = DummyPlayer()
+        Mux = DummyMux()
     else:
         from motorpot import MotorPot
         import smbus
@@ -42,4 +44,7 @@ def startup(noHardware=False):
 
         from player import PlayerControl
         Player = PlayerControl()
+
+        from mux import MuxControl, MUX_ADDR
+        Mux = MuxControl(bus, addr = MUX_ADDR)
 

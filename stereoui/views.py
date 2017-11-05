@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import RequestContext, loader
 import json
 
-from stereocontroller import StereoPot, Power, Player
+from stereocontroller import StereoPot, Power, Player, Mux
 
 # Create your views here.
 
@@ -24,7 +24,8 @@ def setPower(request):
     return HttpResponse("okey dokey")
 
 def setInput(request):
-    Power.set_input( int(request.GET.get("value","2")))
+    #Power.set_input( int(request.GET.get("value","2")))
+    Mux.set_channel( int(request.GET.get("value","0")) )
 
     return HttpResponse("okey dokey")
 
