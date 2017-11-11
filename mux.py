@@ -6,9 +6,10 @@ MUX_ADDR = 0x20
 class MuxControl(PCF8574):
     def __init__(self, bus, addr):
         PCF8574.__init__(self, bus, addr)
-        self.bus.write_byte(self.addr, 0x00)  # all IO are outputs
+        self.set_channel(0) # default to channel 0
 
     def set_channel(self, i):
+        self.input = i
         self.set_gpio(0, i)
 
 def main():

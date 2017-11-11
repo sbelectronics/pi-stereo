@@ -2,6 +2,7 @@ class DummyMotorPot:
     def __init__(self):
         self.value = 1234
         self.setPoint = None
+        self.moving = False
 
     def set(self, value):
         self.setPoint = value
@@ -34,9 +35,13 @@ def startup(noHardware=False):
         Player = DummyPlayer()
         Mux = DummyMux()
     else:
+        #import RPi.GPIO as IO
+        #IO.setwarnings(False)
+
         from motorpot import MotorPot
         import smbus
         bus = smbus.SMBus(1)
+        #StereoPot = DummyMotorPot()
         StereoPot = MotorPot(bus, dirmult=-1) # , verbose=True)
 
         from power import PowerControl

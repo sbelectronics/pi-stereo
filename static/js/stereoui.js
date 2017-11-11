@@ -192,7 +192,7 @@ function stereo() {
             if (settings["artist"]) {
                 $("#now-playing-artist").text(settings["artist"]);
             }
-            if (settings["input"]) {
+            if ((settings["input"]==0) || (settings.input==1) || (settings.input==2) || (settings.input==3)) {
                 onInput(settings["input"]);
             }
             if (settings["station"]) {

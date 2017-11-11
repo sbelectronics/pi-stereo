@@ -40,7 +40,7 @@ def setStation(request):
     return HttpResponse("okey dokey")
 
 def nextSong(request):
-    if (Power.input == 3) or (Player.player=="fmradio"):
+    if (mux.input == 2) or (Player.player=="fmradio"):
         # for FM, the <next> button is my commercial skip
         Power.delay_off(60)
     else:
@@ -65,7 +65,7 @@ def getSettings(request):
     result["volumeCurrent"] = StereoPot.value or 0
     result["volumeMoving"] = StereoPot.moving
     result["power"] = Power.power
-    result["input"] = Power.input
+    result["input"] = Mux.input
 
     result["song"] = "unknown"
     result["artist"] = "unknown"
