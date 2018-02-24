@@ -79,7 +79,7 @@ class PlayerControl(Thread):
         if (name.startswith("pandora")):
             self.setPlayer("pianobar")
         elif (name.startswith("file:")):
-            self.setPlayer("fileplayer", name[5:])
+            self.setPlayer("fileplayer", '"'+name[5:]+'"')
         else:
             x=int(name)*100000
             #x=x-10000
