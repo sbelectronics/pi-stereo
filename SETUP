@@ -78,6 +78,9 @@ tmpfs    /var/tmp        tmpfs    defaults,noatime,nosuid,size=30m    0 0
 tmpfs    /var/log        tmpfs    defaults,noatime,nosuid,mode=0755,size=100m    0 0
 tmpfs    /var/run        tmpfs    defaults,noatime,nosuid,mode=0755,size=2m    0 0
 
+#add to fstab for music playing
+<fileserver-ip>:/fileserver/public/music  /music   nfs     defaults,noac,nolock,ro        0 0
+
 #boot in readonly
 sudo emacs /boot/cmdline.txt
     add to cmdline: fastboot noswap ro

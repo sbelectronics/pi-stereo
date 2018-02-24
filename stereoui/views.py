@@ -34,6 +34,11 @@ def setFMStation(request):
 
     return HttpResponse("okey dokey")
 
+def queueFile(request):
+    Player.set_station( "file:" + request.GET.get("value",  "/home/pi/piano2.wav"), immediate = False )
+
+    return HttpResponse("okey dokey")
+
 def setStation(request):
     Power.set_station( request.GET.get("value","q") )
 
