@@ -98,8 +98,13 @@ class PlayerControl(Thread):
 
         self.queue.put(name)
 
+    # TODO: next_song() should probably go through the Thread...
+
     def next_song(self):
-        open("/home/pi/.config/pianobar/ctl","w").write("n\n")
+        if self.player == "pianobar":
+            open("/home/pi/.config/pianobar/ctl","w").write("n\n")
+        elif self.player == "fileplayer":
+            self.destroy_screen("fileplayer")
 
     def set_pandora_station(self, num):
         open("/home/pi/.config/pianobar/ctl","w").write("s%s\n" % str(num))
