@@ -68,18 +68,6 @@ class PowerControl(Thread):
         else:
             self.turnOnTime = time.time() + amount
 
-    def next_song(self):
-        open("/home/pi/.config/pianobar/ctl","w").write("n\n")
-
-    def set_station(self, num):
-        open("/home/pi/.config/pianobar/ctl","w").write("s%s\n" % str(num))
-
-    def ban_song(self):
-        open("/home/pi/.config/pianobar/ctl","w").write("-\n")
-
-    def love_song(self):
-        open("/home/pi/.config/pianobar/ctl","w").write("+\n")
-
     def control_relayboard(self):
         try:
             if self.power:

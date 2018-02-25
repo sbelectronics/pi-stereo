@@ -40,26 +40,26 @@ def queueFile(request):
     return HttpResponse("okey dokey")
 
 def setStation(request):
-    Power.set_station( request.GET.get("value","q") )
+    Player.set_pandora_station( request.GET.get("value","q") )
 
     return HttpResponse("okey dokey")
 
 def nextSong(request):
-    if (mux.input == 2) or (Player.player=="fmradio"):
+    if (Player.player=="fmradio"):   # was or (mux.input == 2)
         # for FM, the <next> button is my commercial skip
         Power.delay_off(60)
     else:
-       Power.next_song();
+        Player.next_song();
 
     return HttpResponse("okey dokey")
 
 def loveSong(request):
-    Power.love_song();
+    Player.love_song();
 
     return HttpResponse("okey dokey")
 
 def banSong(request):
-    Power.ban_song();
+    Player.ban_song();
 
     return HttpResponse("okey dokey")
 

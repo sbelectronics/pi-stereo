@@ -98,6 +98,18 @@ class PlayerControl(Thread):
 
         self.queue.put(name)
 
+    def next_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("n\n")
+
+    def set_pandora_station(self, num):
+        open("/home/pi/.config/pianobar/ctl","w").write("s%s\n" % str(num))
+
+    def ban_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("-\n")
+
+    def love_song(self):
+        open("/home/pi/.config/pianobar/ctl","w").write("+\n")
+
     def run(self):
         while True:
             if not self.queue.empty():
