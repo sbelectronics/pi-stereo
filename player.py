@@ -17,6 +17,7 @@ class PlayerControl(Thread):
         self.station = "None"
         self.player = "None"
         self.player_non_file_player = None
+        self.last_queue_item = {}
         self.queue = Queue()
 
         self.set_station("pandora")
@@ -55,6 +56,52 @@ class PlayerControl(Thread):
         fn = os.path.join("/home/pi", name)
         os.system(" ".join([fn] + list(args)))
 
+    def get_now_playing(self):
+        result = {}
+
+        result["song"] = "unknown"
+        result["artist"] = "unknown"
+        result["station"] = "unknown"
+        result["stationCount"] = "0"
+        result["stations"] = []
+
+        # First get all of the pandora state, since we always want to make sure the station array is populated.
+
+        try:
+            lines = open("/var/pianobar/now_playing_vars").readlines()
+            for line in lines:
+                if (not "=" in line):
+                    continue
+                (k, v) = line.split("=", 1)
+
+                if (k == "artist"):
+                    result["artist"] = v
+                elif (k == "title"):
+                    result['song'] = v
+                elif (k == "stationName"):
+                    result['station'] = v
+                elif (k == "stationCount"):
+                    result['stationCount'] = v
+                elif (k.startswith("station")):
+                    tmp = (k[7:], v)
+                    result["stations"].append(tmp)
+        except:
+            pass
+
+        # Now, if we're using the fileplayer then let's set the title and artist to what was passed to us in the
+        # fileplayer request.
+
+        if (self.player == "fileplayer"):
+            artist = self.last_queue_item.get("artist")
+            if artist:
+                result["artist"] = artist
+            song = self.last_queue_item.get("song")
+            if song:
+                result["song"] = song
+
+        return result
+
+
     def is_idle(self):
         if (self.player == "fileplayer"):
             # Look for some screen session that's running a fileplayer. If that screen session exists, then the player
@@ -90,13 +137,15 @@ class PlayerControl(Thread):
         if (not name.startswith("file:")):
             self.last_non_file_player = name
 
-    def set_station(self, name, immediate=True):
+    def set_station(self, name, artist=None, song=None, immediate=True):
         if immediate:
             while not self.queue.empty():
                 self.queue.get()
             self.immediate = True
 
-        self.queue.put(name)
+        self.queue.put({"name": name,
+                        "artist": artist,
+                        "song": song})
 
     # TODO: next_song() should probably go through the Thread...
 
@@ -124,7 +173,9 @@ class PlayerControl(Thread):
                     pop_the_queue = True
 
                 if pop_the_queue:
-                    self._set_station(self.queue.get())
+                    item = self.queue.get()
+                    self.last_queue_item = item
+                    self._set_station(item["name"])
 
             # After we've played any files that were requested, we want to return to non-file (Pandora or FM) mode
             if (self.player == "fileplayer") and (self.is_idle()) and (self.last_non_file_player):

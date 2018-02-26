@@ -35,7 +35,10 @@ def setFMStation(request):
     return HttpResponse("okey dokey")
 
 def queueFile(request):
-    Player.set_station( "file:" + request.GET.get("value",  "/home/pi/piano2.wav"), immediate = False )
+    Player.set_station( "file:" + request.GET.get("value",  "/home/pi/piano2.wav"),
+                        artist = request.GET.get("artist", None),
+                        song = request.GET.get("song", None),
+                        immediate = False )
 
     return HttpResponse("okey dokey")
 
@@ -72,34 +75,9 @@ def getSettings(request):
     result["power"] = Power.power
     result["input"] = Mux.input
 
-    result["song"] = "unknown"
-    result["artist"] = "unknown"
-    result["station"] = "unknown"
-    result["stationCount"] = "0"
-    result["stations"] = []
-
     result["fmstation"] = Player.station
 
-    try:
-        lines = open("/var/pianobar/now_playing_vars").readlines()
-        for line in lines:
-            if (not "=" in line):
-                continue
-            (k,v) = line.split("=",1)
-
-            if (k=="artist"):
-                result["artist"] = v
-            elif (k=="title"):
-                result['song'] = v
-            elif (k=="stationName"):
-                result['station'] = v
-            elif (k=="stationCount"):
-                result['stationCount'] = v
-            elif (k.startswith("station")):
-                tmp = (k[7:], v)
-                result["stations"].append(tmp)
-    except:
-        pass
+    result.update(Player.get_now_playing())
 
     return HttpResponse(json.dumps(result), content_type='application/javascript')
 

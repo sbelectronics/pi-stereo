@@ -68,6 +68,10 @@ function stereo() {
     }
 
     onFMStation = function(i) {
+        if (i.startsWith("file:")) {
+            i = "fileplayer";
+        }
+
         var button_selector = "#fmstation-" + i;
         var icon_selector = "#icon-fmstation-" + i;
         $(".btn-fmstation").removeClass("active");
