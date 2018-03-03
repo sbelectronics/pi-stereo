@@ -30,12 +30,22 @@ def setInput(request):
     return HttpResponse("okey dokey")
 
 def setFMStation(request):
-    Player.set_station( request.GET.get("value","pandora") )
+    value = request.GET.get("value", "pandora")
+
+    # If there's no "<something>:" then assume it must be an fm radio station
+    if value[0].isdigit():
+        value = "radio:" + value
+
+    Player.set_station( value )
 
     return HttpResponse("okey dokey")
 
 def queueFile(request):
-    Player.set_station( "file:" + request.GET.get("value",  "/home/pi/piano2.wav"),
+    value = request.GET.get("value",  "/home/pi/piano2.wav")
+    if value.startswith("/"):
+        value = "file:" + value
+
+    Player.set_station( value ,
                         artist = request.GET.get("artist", None),
                         song = request.GET.get("song", None),
                         immediate = False )

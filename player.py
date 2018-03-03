@@ -29,6 +29,7 @@ class PlayerControl(Thread):
         self.destroy_screen("pianobar")
         self.destroy_screen("fmradio")
         self.destroy_screen("fileplayer")
+        self.destroy_screen("toneplayer")
 
         if (player == "pianobar"):
             self.run_player("start_pianobar.sh", *args)
@@ -36,6 +37,8 @@ class PlayerControl(Thread):
             self.run_player("start_fmradio.sh", *args)
         elif (player == "fileplayer"):
             self.run_player("start_fileplayer.sh", *args)
+        elif (player == "toneplayer"):
+            self.run_player("start_toneplayer.sh", *args)
 
         self.player = player
 
@@ -103,7 +106,7 @@ class PlayerControl(Thread):
 
 
     def is_idle(self):
-        if (self.player == "fileplayer"):
+        if (self.player in ["fileplayer", "toneplayer"]):
             # Look for some screen session that's running a fileplayer. If that screen session exists, then the player
             # is still active.
             for dir in os.listdir("/var/run/screen"):
@@ -111,7 +114,7 @@ class PlayerControl(Thread):
                 for fn in os.listdir(screenDir):
                     parts = fn.split(".")
                     if len(parts) == 2:
-                        if parts[1] == "fileplayer":
+                        if parts[1] == self.player:
                             return False
 
         # FM and Pandora are always idle
@@ -127,14 +130,16 @@ class PlayerControl(Thread):
             self.setPlayer("pianobar")
         elif (name.startswith("file:")):
             self.setPlayer("fileplayer", '"'+name[5:]+'"')
-        else:
-            x=int(name)*100000
+        elif (name.startswith("tone:")):
+            self.setPlayer("toneplayer", name[5:])
+        elif name.startswith("radio:"):
+            x=int(name[6:])*100000
             #x=x-10000
             self.setPlayer("fmradio", str(x))
 
         self.station = name
 
-        if (not name.startswith("file:")):
+        if (not name.startswith("file:")) and (not name.startswith("tone:")):
             self.last_non_file_player = name
 
     def set_station(self, name, artist=None, song=None, immediate=True):
@@ -154,6 +159,8 @@ class PlayerControl(Thread):
             open("/home/pi/.config/pianobar/ctl","w").write("n\n")
         elif self.player == "fileplayer":
             self.destroy_screen("fileplayer")
+        elif self.player == "toneplayer":
+            self.destroy_screen("toneplayer")
 
     def set_pandora_station(self, num):
         open("/home/pi/.config/pianobar/ctl","w").write("s%s\n" % str(num))
@@ -175,10 +182,12 @@ class PlayerControl(Thread):
                 if pop_the_queue:
                     item = self.queue.get()
                     self.last_queue_item = item
+                    print "popped from queue:", item["name"]
                     self._set_station(item["name"])
 
             # After we've played any files that were requested, we want to return to non-file (Pandora or FM) mode
-            if (self.player == "fileplayer") and (self.is_idle()) and (self.last_non_file_player):
+            if (self.player in ["fileplayer", "toneplayer"]) and (self.is_idle()) and (self.last_non_file_player):
+                print "setting last_non_file_player"
                 self._set_station(self.last_non_file_player)
 
             time.sleep(0.1)
