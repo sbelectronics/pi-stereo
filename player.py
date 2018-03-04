@@ -10,7 +10,7 @@ PlayerControl().run_player("start_pianobar.sh")
 """
 
 class PlayerControl(Thread):
-    def __init__(self):
+    def __init__(self, power=None):
         Thread.__init__(self)
 
         self.immediate = False
@@ -18,6 +18,7 @@ class PlayerControl(Thread):
         self.player = "None"
         self.player_non_file_player = None
         self.last_queue_item = {}
+        self.power = power
         self.queue = Queue()
 
         self.set_station("pandora")
@@ -186,8 +187,12 @@ class PlayerControl(Thread):
                     self._set_station(item["name"])
 
             # After we've played any files that were requested, we want to return to non-file (Pandora or FM) mode
-            if (self.player in ["fileplayer", "toneplayer"]) and (self.is_idle()) and (self.last_non_file_player):
-                print "setting last_non_file_player"
-                self._set_station(self.last_non_file_player)
+            if (self.player in ["fileplayer", "toneplayer"]) and (self.is_idle()):
+                if (self.last_non_file_player):
+                    print "setting last_non_file_player"
+                    self._set_station(self.last_non_file_player)
+                if self.power:
+                    self.power.on_idle()
+
 
             time.sleep(0.1)

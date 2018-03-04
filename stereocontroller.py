@@ -48,7 +48,7 @@ def startup(noHardware=False):
         Power = PowerControl()
 
         from player import PlayerControl
-        Player = PlayerControl()
+        Player = PlayerControl(power = Power)
 
         from mux import MuxControl, MUX_ADDR
         Mux = MuxControl(bus, addr = MUX_ADDR)

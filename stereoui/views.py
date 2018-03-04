@@ -45,6 +45,10 @@ def queueFile(request):
     if value.startswith("/"):
         value = "file:" + value
 
+    if not Power.power:
+        autoOff = value.startswith("file") # the fileplayer can auto-off the amp when all files are complete
+        Power.set_power(True, autoOff=autoOff)
+
     Player.set_station( value ,
                         artist = request.GET.get("artist", None),
                         song = request.GET.get("song", None),

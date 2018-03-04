@@ -40,6 +40,7 @@ class PowerControl(Thread):
         IO.output(self.enable, True)
 
         self.power = False
+        self.autoOff = False
         self.newPower = None
         self.turnOnTime = None
 
@@ -58,8 +59,10 @@ class PowerControl(Thread):
 #        IO.output(MULT_2, (value>>2)&1)
 #        IO.output(MULT_3, (value>>3)&1)
 
-    def set_power(self, value):
+    def set_power(self, value, autoOff=False):
         self.newPower = value
+        if value:
+            self.autoOff = autoOff
 
     def delay_off(self, amount):
         self.set_power(False)
@@ -78,6 +81,12 @@ class PowerControl(Thread):
             sock.sendto(msg, (RELAY_BOARD_IP, 1234))
         except:
             traceback.print_exc("failed to notify the relay board")
+
+    def on_idle(self):
+        """ Called by player when the player is idle, lets us know we can power-down if we want to """
+        if self.autoOff:
+            self.newPower = False
+            self.autoOff = False
 
     def run(self):
         last_input1 = True # inputs have pullups
