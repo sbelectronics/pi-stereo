@@ -1,7 +1,7 @@
 import sys
 import time
 from threading import Thread
-from motor import Motor, L293_1, L293_2, L293_ENABLE
+from motor import Motor, L293_1, L293_2, L293_ENABLE, L293_3, L293_4, L293_ENABLE2
 from ads1015 import ADS1015, MUX_AIN0, PGA_4V, MODE_CONT, DATA_1600, COMP_MODE_TRAD, COMP_POL_LOW, COMP_NON_LAT, COMP_QUE_DISABLE
 
 # moved the L293 enable from gpio18 to gpio15 to prevent conflict with
@@ -28,21 +28,36 @@ class MotorPot(Thread):
         self.daemon = True
         self.verbose = verbose
 
+        self.lastStopTime = time.time()
+
         self.start()
 
     def set(self, value):
         self.setPoint = value
         self.newSetPoint = True
 
+    def check_for_request(self):
+        pass
+
+    def handle_value(self):
+        pass
+
     def run(self):
+        lastStallValue = -1
+        stallStack = []
         setPoint = None
         while True:
+            self.check_for_request()
+
             self.value = self.adc.read_conversion()
+
+            self.handle_value()
 
             if self.newSetPoint:
                 setPoint = self.setPoint
                 self.newSetPoint=False
                 settle = 0
+                stallStack = []
 
             if setPoint is not None:
                 if (self.value < setPoint):
@@ -57,17 +72,29 @@ class MotorPot(Thread):
 
                     # are we done yet?
                     settle=settle+1
-                    if (settle>10):
+                    if (settle>32):
                         setPoint = None
                 else:
                     settle = 0
                     if (error < 10):
-                        settle = 0
                         speed = 50
+                    elif (error < 25):
+                        speed = 55
+                    elif (error < 50):
+                        speed = 65
                     elif (error < 100):
                         speed = 75
                     else:
                         speed = 100
+
+                stallStack.insert(0, self.value)
+                stallStack = stallStack[:250]
+                minv = min(stallStack)
+                maxv = max(stallStack)
+                if (len(stallStack)>=250) and ((maxv-minv) < 25):
+                    print "stalled at", self.value, maxv, minv
+                    speed = 0
+                    setPoint = None
 
                 if self.verbose:
                     print "moving", self.value, setPoint, dir, speed
@@ -79,10 +106,14 @@ class MotorPot(Thread):
 
                 time.sleep(0.001)
             else:
+                if self.moving:
+                    self.lastStopTime = time.time()
+
                 self.moving = False
 
                 if self.verbose:
                     print "monitor", self.value
+
                 # course-grained if we're just reading it
                 time.sleep(0.1)
 
@@ -96,7 +127,8 @@ def main():
     import smbus
     bus = smbus.SMBus(1)
 
-    motorpot = MotorPot(bus, dirmult=-1, verbose=True)
+    #motorpot = MotorPot(bus, dirmult=-1, verbose=True)
+    motorpot = MotorPot(bus, dirmult=1, verbose=True, motor_pin1=L293_3, motor_pin2=L293_4, motor_enable = L293_ENABLE2)
 
     if sys.argv[1]!="none":
         motorpot.set(int(sys.argv[1]))
