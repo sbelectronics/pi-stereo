@@ -1,0 +1,23 @@
+emacs /etc/modules
+   comment out snd-bcm2835 and i2c-bcm2708
+
+emacs /boot/config.txt
+   dtoverlay=hifiberry-digi
+
+emacs /etc/asound.conf
+    pcm.!default  {
+     type hw card 0
+    }
+    ctl.!default {
+     type hw card 0
+    }
+
+# is this necessary
+mkdir /etc/modprobe.d-unused
+mv /etc/modprobe.d/asla-base.conf /etc/modprobe.d-unused 
+
+NOTE:
+   GPIO 18-21 need to be reserved for the digi+
+   To free these up, I
+      * hardwired MULT_2 to +5V, MULT_4 to GND
+      * moved ENABLE_M1 to GPIO15  (note GPIO4 on new board revision)
