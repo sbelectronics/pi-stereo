@@ -1,1 +1,14 @@
 there's a config file here, but it's not uploaded to git, because... duh.
+
+there's a ctl file here that hyperbackup was complaining about, so I tarred
+it up inside of ctl.tar.gz and then deleted it. Here is the state of the
+file:
+  File: 'ctl'
+    Size: 0               Blocks: 0          IO Block: 131072 fifo
+    Device: 2ah/42d Inode: 1857124     Links: 1
+    Access: (0644/prw-r--r--)  Uid: ( 1026/ smbaker)   Gid: (  100/   users)
+    Access: 2019-09-19 09:36:40.000000000 -0700
+    Modify: 2015-11-16 11:59:08.000000000 -0800
+    Change: 2019-09-19 09:36:40.973975437 -0700
+     Birth: -
+     
