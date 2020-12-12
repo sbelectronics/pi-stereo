@@ -3,6 +3,7 @@ emacs /etc/modules
 
 emacs /boot/config.txt
    dtoverlay=hifiberry-digi
+   # remove dtparam=audio=on
 
 emacs /etc/asound.conf
     pcm.!default  {

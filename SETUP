@@ -1,5 +1,6 @@
-configured terminal emulator for UTF-8
+configured terminal emulator for vt102 / utf-8
 
+export LANG=posix
 export TERM=vt102
 raspi-config
    expand fs
@@ -7,16 +8,30 @@ raspi-config
    enable i2c
 apt-get update
 apt-get install emacs23-nox
-emacs /etc/netowrk/intercaces
-  address 198.0.0.215
-  netmask 255.255.255.0
-  network 198.0.0.0
-  broadcast 198.0.0.255
-  gateway 198.0.0.108
+# configure network in ubiquiti instead
+#emacs /etc/netowrk/intercaces
+#  address 198.0.0.215
+#  netmask 255.255.255.0
+#  network 198.0.0.0
+#  broadcast 198.0.0.255
+#  gateway 198.0.0.108
 
 sudo bash -c "echo i2c-bcm2708 >> /etc/modules"
 sudo bash -c "echo i2c-dev >> /etc/modules"
 sudo reboot
+
+# add smbaker
+sudo adduser smbaker --uid 1026
+sudo usermod smbaker -a -G pi,adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio
+
+# setup ssh key
+mkdir ~/.ssh
+cat > ~/.ssh/authorized_keys
+    # paste the usual key
+chmod 0700 ~/.ssh
+chmod 0600 ~/.ssh/authorized_keys
+
+mkdir /home/pi/.config
 
 # from home
 scp alsa-base.conf pi@198.0.0.215:/home/pi/
@@ -25,24 +40,21 @@ scp start_django.sh pi@198.0.0.215:/home/pi/
 scp dotconfig/pianobar/* pi@198.0.0.215:/home/pi/.config/pianobar/
 
 # moar stuff
-sudo apt-get -y install screen
-sudo apt-get -y install python-smbus
-sudo apt-get -y install i2c-tools
+sudo apt-get -y install screen python-smbus i2c-tools python-pip
 sudo cp alsa-base.conf /etc/modprobe.d/
 rm -f /home/pi/.config/pianobar/ctl
 mkfifo /home/pi/.config/pianobar/ctl
 
 # django
-#sudo apt-get -y install python-pip
+sudo apt-get -y install python-pip
 sudo apt-get -y install python-setuptools
-sudo easy_install pip
-sudo apt-get -y install sqlite3
-sudo apt-get -y install python-dev
+#sudo easy_install pip
+sudo apt-get -y install sqlite3 python-dev
 sudo pip install Django==1.7
 sudo pip install pyephem
 
 # rtl-sdr
-apt-get install git cmake libusb-dev libusb-1.0-0-dev build-essential
+sudo apt-get install git cmake libusb-dev libusb-1.0-0-dev build-essential
 git clone git://git.osmocom.org/rtl-sdr.git
 cd rtl-sdr/
 mkdir build
@@ -59,12 +71,16 @@ sudo bash
 # rtl_fm -M wbfm -f 99.1M -r 48k | aplay -r 48k -f S16_LE
 
 # pianobar
-sudo apt-get -y install libao-dev libmad0-dev libfaad-dev libgnutls-dev libjson0-dev libgcrypt11-dev
+git clone https://github.com/PromyLOPh/pianobar.git
+sudo apt-get -y install libao-dev libmad0-dev libfaad-dev ffmpeg libavcodec-dev libavformat-dev libavfilter-dev libcurl4-openssl-dev libjsonc-dev libgcrypt20-dev
+#sudo apt-get -y install libao-dev libmad0-dev libfaad-dev libgnutls-dev libjson0-dev libgcrypt11-dev
 cd pianobar
-make
-sudo make install
+make clean && make
+gmake install
+#sudo make install
 sudo mkdir /var/pianobar
 sudo chmod a+rwx /var/pianobar
+sudo mkdir /music
 
 #autostart
 crontab -e
@@ -88,4 +104,5 @@ sudo emacs /etc/fstab
     add ro to each mmc mount
 
 # get the latest TLS Fingerprint from pandors
-openssl s_client -connect tuner.pandora.com:443 < /dev/null 2> /dev/null | openssl x509 -noout -fingerprint | tr -d ':' | cut -d'=' -f2
+# OLD - openssl s_client -connect tuner.pandora.com:443 < /dev/null 2> /dev/null | openssl x509 -noout -fingerprint | tr -d ':' | cut -d'=' -f2
+openssl s_client -connect internal-tuner.pandora.com:443 < /dev/null 2> /dev/null | openssl x509 -noout -fingerprint | tr -d ':' | cut -d'=' -f2
